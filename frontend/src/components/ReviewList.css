@@ -1,0 +1,38 @@
+.image {
+  width: 200px;
+  height: auto;
+}
+
+.name {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 0.75rem;
+}
+
+.email {
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 1.rem;
+  }
+
+.updated_at {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.response {
+  color: #8b572a;
+  font-size: 0.875rem;
+  text-transform: capitalize;
+}
+
+
+.description, .title {
+  color: rgba(0, 0, 0, 0.87);
+  white-space: pre-wrap;
+  margin-top: 0.625rem;
+  word-break: break-word;
+  font-size: 0.875rem;
+  text-transform: capitalize;
+}
