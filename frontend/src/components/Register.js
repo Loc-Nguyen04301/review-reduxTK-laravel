@@ -1,17 +1,14 @@
 import React from "react";
 import "./Login.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
-import { registerAuth } from "../slices/auth";
-
-import { Link, useNavigate } from "react-router-dom";
+import AuthService from "../services/AuthService";
+import { Link } from "react-router-dom";
 
 const Login = () => {
-  const dispatch = useDispatch();
+
   const notify = () =>
     toast.success("Register Successfully", {
       position: "top-center",
@@ -35,7 +32,6 @@ const Login = () => {
       .min(6, "Confirm Password must be at least 6 characters"),
   });
 
-  const navigate = useNavigate();
 
   return (
     <Formik
@@ -49,19 +45,10 @@ const Login = () => {
       onSubmit={(values) => {
         alert(JSON.stringify(values, null, 2));
         if (values.password === values.confirm_password) {
-          dispatch(registerAuth(values))
+           AuthService.register(values)
             .then(() => {
               notify();
-              navigate("/reviews");
             })
-            .catch((error) => {
-              console.log(error);
-              if (error.response) {
-                if (error.response.data.errors) {
-                  alert(error.response.data.errors, null, 2);
-                }
-              }
-            });
         } else {
           alert("Password not matched Confirm Password");
         }

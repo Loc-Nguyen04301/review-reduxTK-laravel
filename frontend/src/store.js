@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import reviewReducer from "./slices/review";
-import authReducer from './slices/auth'
+import authReducer from "./slices/auth";
 
 // create Store
 const store = configureStore({

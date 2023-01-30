@@ -1,21 +1,21 @@
 import React from "react";
 import "./Login.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-// import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginAuth } from "../slices/auth";
 
 const Login = () => {
-  const navigate = useNavigate();
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").email("Email is invalid"),
     password: Yup.string()
       .required("Password is required")
       .min(6, "Password must be at least 6 characters"),
   });
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return (
     <Formik
@@ -25,32 +25,14 @@ const Login = () => {
       }}
       validationSchema={validationSchema}
       onSubmit={(values) => {
-        // const { email, password } = values;
-        // make request first to sanctum/csrf-cookie
-        axios.get("/sanctum/csrf-cookie").then(() => {
-          const payload = values;
-          axios
-            .post("http://localhost:8000/api/login", payload, {
-              headers: { Accept: "application/json" },
-            })
-            .then((response) => {
-              console.log(response.data.user);
-              if (response.data.user) {
-                alert("Login success");
-                navigate("/");
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-              if (error.response) {
-                if (error.response.data.message) {
-                  alert(error.response.data.message);
-                }
-                if (error.response.data.errors) {
-                  alert(error.response.data.errors);
-                }
-              }
-            });
+        dispatch(loginAuth(values)).then((res) => {
+          console.log(res);
+          localStorage.setItem("user", JSON.stringify(res.payload.user));
+          localStorage.setItem(
+            "accessToken",
+            JSON.stringify(res.payload.access_token)
+          );
+          navigate("/reviews");
         });
       }}
     >

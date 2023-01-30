@@ -6,6 +6,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
 
 
+
 abstract class RepositoryEloquent implements RepositoryInterface
 {
 

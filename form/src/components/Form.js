@@ -13,13 +13,12 @@ import {
   ChangeTitle,
   ChangeBase64Image,
   createReview,
+  RemoveBase64Image,
 } from "../slices/review";
-
 import { useLoginFormValidator } from "../validation/useLoginFormValidator";
 
 const Form = () => {
   const review = useSelector((state) => state.review);
-
   const [form, setForm] = useState({
     email: "",
     description: "",
@@ -27,6 +26,7 @@ const Form = () => {
   const { errors, validateForm } = useLoginFormValidator(form);
 
   const dispatch = useDispatch();
+
   const notify = () =>
     toast.success("Create Successfully", {
       position: "top-center",
@@ -46,7 +46,7 @@ const Form = () => {
   };
   const { stars, getStarProps, getStarWrapperProps, selectingValue } =
     useStars(config);
-
+    
   const handleChangeName = useCallback(
     (e) => {
       dispatch(ChangeName(e.target.value));
@@ -103,7 +103,6 @@ const Form = () => {
     async (e) => {
       const file = e.target.files[0];
       const base64 = await convertBase64(file);
-      
       dispatch(ChangeBase64Image(base64));
     },
     [dispatch]
@@ -142,13 +141,28 @@ const Form = () => {
         ratedValue,
         base64Image,
       };
-      dispatch(createReview(data))
+
+      // yeu cau rate star
+      if(ratedValue==null){
+        alert('You must rate Value',ratedValue);
+      }
+      else{
+        dispatch(createReview(data))
         .unwrap()
         .then(() => {
           notify();
         });
+      }
+     
     },
     [dispatch, errors, form, validateForm, review]
+  );
+
+  const removeImageHandleClick = useCallback(
+    (index) => {
+      dispatch(RemoveBase64Image(index));
+    },
+    [dispatch]
   );
 
   return (
@@ -223,11 +237,11 @@ const Form = () => {
                       },
                     })}
                   >
-                    {stars?.map((star, i) => (
+                    {stars?.map((star, index) => (
                       <span
-                        key={i}
+                        key={index}
                         name="ratedValue"
-                        {...getStarProps(i, {
+                        {...getStarProps(index, {
                           style: {
                             fontSize: "40px",
                             color: "gold",
@@ -255,9 +269,19 @@ const Form = () => {
                 <div className="col-12 d-flex flex-row flex-wrap justify-content-around">
                   {review.base64Image.map((item, index) => {
                     return (
-                      <li key={index} className="card m-3 image">
-                        <img src={item} alt=""></img>
-                      </li>
+                      <React.Fragment>
+                        <li key={index} className="card m-3 image">
+                          <button
+                            key={index}
+                            className="btn btn-close btn-image"
+                            aria-label="Close"
+                            onClick={() => {
+                              removeImageHandleClick(index);
+                            }}
+                          ></button>
+                          <img src={item} alt=""></img>
+                        </li>
+                      </React.Fragment>
                     );
                   })}
                 </div>

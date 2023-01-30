@@ -38,10 +38,11 @@ const reviewSlice = createSlice({
     ChangeBase64Image: (state, action) => {
       state.base64Image = [...state.base64Image, action.payload];
     },
-
-    // RemoveBase64Image: (state, action) => {
-      
-    // },
+    RemoveBase64Image: (state, action) => {
+      state.base64Image = state.base64Image.filter(
+        (item, index) => index !== action.payload
+      );
+    },
   },
   extraReducers: {},
 });
@@ -66,4 +67,5 @@ export const {
   ChangeDescription,
   ChangeRatedValue,
   ChangeBase64Image,
+  RemoveBase64Image,
 } = reviewSlice.actions;

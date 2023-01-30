@@ -50,29 +50,9 @@ class ReviewController extends Controller
     }
 
 
-    protected function saveImgBase64($param, $folder): string
-    {
-        list($extension, $content) = explode(';', $param);
-        $tmpExtension = explode('/', $extension);
-        preg_match('/.([0-9]+) /', microtime(), $m);
-        $fileName = sprintf('img%s%s.%s', date('YmdHis'), $m[1], $tmpExtension[1]);
-        $content = explode(',', $content)[1];
-        $storage = Storage::disk('public');
-
-        $checkDirectory = $storage->exists($folder);
-
-        if (!$checkDirectory) {
-            $storage->makeDirectory($folder);
-        }
-
-        $storage->put($folder . '/' . $fileName, base64_decode($content), 'public');
-
-        return $fileName;
-    }
 
     public function store(Request $request): JsonResponse
     {
-
         try {
             $review = $this->reviewService->createReview($request->all());
             return $this->successfulResult('Create review successfully', $review);
@@ -95,9 +75,9 @@ class ReviewController extends Controller
 
     public function destroy($id): JsonResponse
     {
-        $bool =$this->reviewService->deleteReview($id);
+        $bool = $this->reviewService->deleteReview($id);
         if ($bool) {
-            return $this->successfulResult( 'Delete review successfully',$bool);
+            return $this->successfulResult('Delete review successfully', $bool);
         } else {
             return $this->failResult('Failt to delete', 500);
         }
@@ -105,9 +85,9 @@ class ReviewController extends Controller
 
     public function destroyAll(): JsonResponse
     {
-        $bool =$this->reviewService->deleteAllReview();
+        $bool = $this->reviewService->deleteAllReview();
         if ($bool) {
-            return $this->successfulResult('Update review successfully',$bool);
+            return $this->successfulResult('Update review successfully', $bool);
         } else {
             return $this->failResult('Update review successfully', 500);
         }
@@ -123,7 +103,4 @@ class ReviewController extends Controller
             return $this->failResult('Fail to get data', 422);
         }
     }
-
-
-
 }
